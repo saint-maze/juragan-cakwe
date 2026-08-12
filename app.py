@@ -117,8 +117,28 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- LOAD DATA AND ARTIFACTS ---
-DATA_PATH = r'z:/Kuliyeah/SEM 8/Final Dance/Dataset/archive/Sleep_health_and_lifestyle_dataset.csv'
-ARTIFACT_PATH = r'z:/Kuliyeah/SEM 8/Final Dance/models/model_artifacts.pkl'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def find_path(default_filename, candidate_relative_paths):
+    for rel_path in candidate_relative_paths:
+        full_path = os.path.join(BASE_DIR, rel_path)
+        if os.path.exists(full_path):
+            return full_path
+        if os.path.exists(rel_path):
+            return rel_path
+    return default_filename
+
+DATA_PATH = find_path('Sleep_health_and_lifestyle_dataset.csv', [
+    'Sleep_health_and_lifestyle_dataset.csv',
+    os.path.join('Dataset', 'archive', 'Sleep_health_and_lifestyle_dataset.csv'),
+    r'Dataset/archive/Sleep_health_and_lifestyle_dataset.csv'
+])
+
+ARTIFACT_PATH = find_path(os.path.join('models', 'model_artifacts.pkl'), [
+    os.path.join('models', 'model_artifacts.pkl'),
+    'model_artifacts.pkl',
+    r'models/model_artifacts.pkl'
+])
 
 @st.cache_data
 def load_data():
